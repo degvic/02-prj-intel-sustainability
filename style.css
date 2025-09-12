@@ -145,8 +145,8 @@ img{ display:block; max-width:100%; height:auto; border-radius:12px; }
   color:#fff;
   font-weight:500;
 }
-.helper::before{ content:"💡 "; }
-.helper::after{ content:" 💡"; }
+.helper::before{ content:""; }
+.helper::after{ content:""; }
 
 /* ======= Mobile ======= */
 @media (max-width:720px){
