@@ -168,3 +168,716 @@ img{ display:block; max-width:100%; height:auto; border-radius:12px; }
   position:absolute !important;
   width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);
 }
+
+
+/* ===== Additions for new sections & accessibility ===== */
+.learn-btn { border-width: 2px; }
+.learn-btn:focus-visible,
+.btn:focus-visible,
+.accordion-button:focus-visible,
+.form-control:focus-visible,
+.form-check-input:focus-visible,
+a:focus-visible {
+  outline: 3px solid #66ccff;
+  outline-offset: 2px;
+}
+
+/* Improve contrast for links on dark bg */
+footer .nav-link { opacity: .95; }
+footer .nav-link:hover { text-decoration: underline; }
+
+/* Headings rhythm */
+section.container h2 { letter-spacing: .2px; }
+
+/* Optional: when page is RTL, ensure our custom timeline still looks correct */
+/* ---------- RTL SCROLL FIX ---------- */
+/* Keep the timeline's scroller mechanics LTR on RTL pages to avoid page-wide horizontal offset */
+[dir="rtl"] .timeline {
+  direction: ltr;              /* scrollLeft=0 shows first cards */
+  flex-direction: row-reverse; /* visual RTL order */
+}
+/* Also avoid the whole document gaining a horizontal scrollbar */
+html, body { overflow-x: clip; }
+/* ------------------------------------ */
+
+/* Ensure icons don’t get visually clipped */
+.card .bi { font-size: 1.25rem; line-height: 1; }
+
+/* Rounded helper */
+.rounded-4 { border-radius: 1.25rem !important; }
+
+
+/* === Perf + polish additions === */
+
+/* let the last card fully scroll into view and avoid clipped end */
+.timeline { padding-inline-end: 2.5rem; scroll-padding-inline-end: 2.5rem; scrollbar-gutter: stable both-edges; }
+
+/* paint off-screen cards only when needed */
+.timeline .card { content-visibility: auto; contain-intrinsic-size: 320px 460px; }
+
+/* avoid CLS by establishing intrinsic ratio for images */
+.thumb img { aspect-ratio: 16 / 10; width: 100%; height: auto; }
+
+
+
+/* unify radii and shadows for consistency */
+:root { --radius: 16px; --shadow: 0 10px 24px rgba(0,0,0,.15); }
+.card { border-radius: var(--radius); box-shadow: var(--shadow); transition: transform .15s ease, box-shadow .15s ease; }
+.card:hover, .card:focus-within {
+  direction: inherit;
+  unicode-bidi: plaintext; transform: translateY(-2px); box-shadow: 0 14px 32px rgba(0,0,0,.18); }
+
+/* improve text rhythm */
+.card .summary { line-height: 1.55; }
+.card .title { margin-bottom: .35rem; }
+
+
+
+/* === RTL punctuation fix === */
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3,
+[dir="rtl"] h4,
+[dir="rtl"] h5,
+[dir="rtl"] h6,
+[dir="rtl"] p,
+[dir="rtl"] .card-text,
+[dir="rtl"] .summary,
+[dir="rtl"] .accordion-button,
+[dir="rtl"] .accordion-body {
+  direction: auto;
+  unicode-bidi: plaintext;
+}
+
+/* force specific UI bits like years/acronyms to always stay LTR */
+.force-ltr {
+  direction: ltr !important;
+  unicode-bidi: isolate !important;
+  text-align: left !important;
+}
+
+
+
+/* ==== BiDi punctuation fixes (keep periods/questions on the correct side) ==== */
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3,
+[dir="rtl"] h4,
+[dir="rtl"] h5,
+[dir="rtl"] h6,
+[dir="rtl"] p,
+[dir="rtl"] .summary,
+[dir="rtl"] .card-text,
+[dir="rtl"] .accordion-button,
+[dir="rtl"] .accordion-body,
+[dir="rtl"] .helper {
+  direction: auto;           /* base direction from first strong character */
+  unicode-bidi: plaintext;   /* isolates and prevents RTL container from pulling punctuation */
+}
+
+/* Force LTR for small fragments (years, acronyms like x86) inside RTL containers */
+[dir="rtl"] .force-ltr {
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: left;
+}
+
+
+
+/* === Stronger BiDi punctuation handling === */
+[dir="rtl"] p,
+[dir="rtl"] label,
+[dir="rtl"] .form-label,
+[dir="rtl"] .form-check-label,
+[dir="rtl"] .helper,
+[dir="rtl"] .accordion-button,
+[dir="rtl"] .accordion-body,
+[dir="rtl"] .card-text,
+[dir="rtl"] .summary {
+  direction: auto;
+  unicode-bidi: plaintext;
+  text-align: start;
+}
+
+@supports not (unicode-bidi: plaintext) {
+  [dir="rtl"] p,
+  [dir="rtl"] label,
+  [dir="rtl"] .form-label,
+  [dir="rtl"] .form-check-label,
+  [dir="rtl"] .helper,
+  [dir="rtl"] .accordion-button,
+  [dir="rtl"] .accordion-body,
+  [dir="rtl"] .card-text,
+  [dir="rtl"] .summary {
+    unicode-bidi: isolate;
+  }
+}
+
+
+
+/* === Explore More formatting === */
+.explore-more .card-body { text-align: start; } /* left in LTR, right in RTL */
+.explore-more .card-title { display: flex; align-items: center; gap: .5rem; }
+[dir="rtl"] .explore-more .card-title { flex-direction: row-reverse; } /* icon follows heading in RTL */
+.explore-more .learn-btn { display: inline-block; margin-top: .25rem; }
+
+
+
+/* === RTL strong alignment fixes === */
+
+/* Headings (timeline, FAQ, Explore More, forms) should align right in RTL */
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3,
+[dir="rtl"] h4,
+[dir="rtl"] h5,
+[dir="rtl"] h6,
+[dir="rtl"] .card-title,
+[dir="rtl"] .accordion-button,
+[dir="rtl"] .accordion-body,
+[dir="rtl"] .form-label,
+[dir="rtl"] label,
+[dir="rtl"] .helper,
+[dir="rtl"] .explore-more .card-body {
+  text-align: right !important;
+}
+
+/* Ensure Explore More body content respects RTL */
+[dir="rtl"] .explore-more .card-body {
+  direction: rtl;
+}
+
+/* FAQ accordion heading alignment */
+[dir="rtl"] .accordion-button {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+/* Keep icons aligned properly in Explore More */
+[dir="rtl"] .explore-more .card-title {
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
+
+
+
+/* ===== Stronger RTL alignment + punctuation handling ===== */
+
+/* Global section headings align to the start edge (right in RTL) */
+[dir="rtl"] section.container h2 { text-align: right; }
+
+/* Timeline overlay text (appears on hover) keeps punctuation visually correct */
+[dir="rtl"] .timeline .more,
+[dir="rtl"] .timeline .helper {
+  direction: auto;
+  unicode-bidi: plaintext;
+  text-align: start;
+}
+
+/* Explore More: align all text to the right in RTL and keep icon/heading order correct */
+[dir="rtl"] .explore-more .card-body,
+[dir="rtl"] .explore-more .card-title,
+[dir="rtl"] .explore-more .card-text,
+[dir="rtl"] .explore-more p,
+[dir="rtl"] .explore-more .learn-btn {
+  text-align: right;
+}
+[dir="rtl"] .explore-more .card-title { flex-direction: row-reverse; }
+
+/* FAQ: right-align question headers and answers in RTL */
+[dir="rtl"] #faq-title { text-align: right; }
+[dir="rtl"] .accordion-button,
+[dir="rtl"] .accordion-body { 
+  text-align: right; 
+  direction: auto; 
+  unicode-bidi: plaintext;
+}
+
+/* Form: labels and helper text right-aligned; punctuation handled */
+[dir="rtl"] .form-label,
+[dir="rtl"] .form-check-label,
+[dir="rtl"] #subscribe-help {
+  text-align: right;
+  direction: auto;
+  unicode-bidi: plaintext;
+  display:block;
+}
+
+
+
+/* Keep hero content centered in both LTR and RTL */
+header.hero,
+header.hero .container,
+header.hero h1,
+header.hero p {
+  text-align: center;
+}
+
+
+
+/* === Enforce RTL visual alignment for timeline cards and hover panels === */
+[dir="rtl"] .card { text-align: right; }
+
+/* Year badge sits on the right edge in RTL */
+[dir="rtl"] .card .year { 
+  float: inline-end; /* logical float (supported in modern browsers) */
+}
+@supports not (float: inline-end) {
+  [dir="rtl"] .card .year { float: right; }
+}
+
+/* Hover reveal panel: right-align text in RTL while keeping bi-di sane */
+[dir="rtl"] .timeline .more {
+  text-align: right !important;
+  direction: auto;
+  unicode-bidi: plaintext;
+}
+
+/* Explore More: strengthen right alignment in RTL */
+[dir="rtl"] .explore-more .card-title,
+[dir="rtl"] .explore-more .card-text,
+[dir="rtl"] .explore-more p,
+[dir="rtl"] .explore-more .learn-btn {
+  text-align: right !important;
+}
+
+/* Keep hero subhead centered in both directions (guard against overrides) */
+header.hero .subhead { text-align: center !important; }
+
+
+
+/* Prevent year pill from overlapping card titles in RTL */
+[dir="rtl"] .timeline .card .title {
+  padding-inline-end: 5.5rem; /* reserve space for the year chip on the right */
+  display: block;
+}
+
+/* If your layout uses a header slot above the title, add a tiny top offset */
+[dir="rtl"] .timeline .card .year { z-index: 2; }
+
+
+
+/* === RTL timeline year alignment fix === */
+
+/* Make the year pill absolutely positioned in the card header */
+[dir="rtl"] .timeline .card {
+  position: relative;
+}
+
+[dir="rtl"] .timeline .card .year {
+  position: absolute;
+  top: 16px;
+  inset-inline-end: 16px; /* anchors to the right in RTL */
+  margin: 0;              /* reset default margin */
+  float: none;            /* disable float */
+}
+
+/* Give the title extra top margin so it clears the year pill */
+[dir="rtl"] .timeline .card .title {
+  margin-top: 3.5rem; /* pushes title down below year badge */
+  padding-inline-end: 0; /* no artificial spacing needed anymore */
+}
+
+
+
+/* === RTL year badge fix: restore pill size and alignment === */
+[dir="rtl"] .timeline .card .year {
+  position: absolute;
+  top: 16px;
+  inset-inline-end: 16px;
+  margin: 0;
+  float: none;
+  padding: 0.25rem 0.75rem; /* restore pill size */
+  min-width: 3rem;          /* prevents collapse */
+  text-align: center;
+}
+
+/* === Hero heading/subhead center fix === */
+header.hero h1,
+header.hero p,
+header.hero .subhead {
+  text-align: center !important;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+
+/* === Year pill size restore in RTL === */
+[dir="rtl"] .timeline .card .year {
+  padding: 0.25rem 0.75rem; /* restore pill look */
+  min-width: 3rem;          /* prevent collapse */
+  line-height: 1;           /* tidy vertical rhythm */
+  text-align: center;
+}
+
+/* === Keep hero headline & subhead centered in all directions === */
+header.hero h1,
+header.hero p,
+header.hero .subhead {
+  text-align: center !important;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+
+/* === Final RTL Year Pill Fix === */
+[dir="rtl"] .timeline .card {
+  position: relative;
+}
+
+[dir="rtl"] .timeline .card .year {
+  position: absolute;
+  top: 16px;
+  inset-inline-end: 16px;   /* anchor on right in RTL */
+  margin: 0;
+  float: none;
+  padding: 0.4rem 0.9rem;   /* same padding as LTR pill */
+  min-width: 3.2rem;        /* maintain consistent pill size */
+  text-align: center;
+  border-radius: 999px;     /* keep rounded pill */
+}
+
+/* Push card titles down so they don't overlap with the year pill */
+[dir="rtl"] .timeline .card .title {
+  margin-top: 3.5rem; 
+  padding-inline-end: 0; 
+}
+
+
+
+/* === Mirror year pill bar shape on both sides & unify positioning === */
+.timeline .card { position: relative; }
+
+/* LTR: year attaches on the left with a flat left edge and rounded right side */
+[dir="ltr"] .timeline .card .year {
+  position: absolute;
+  top: 16px;
+  inset-inline-start: 16px;
+  inset-inline-end: auto;
+  padding: 6px 16px;
+  border-radius: 999px 0 0 999px; /* round right side only */
+  margin: 0;
+  float: none;
+  min-width: 3.2rem;
+  text-align: center;
+}
+
+/* RTL: year attaches on the right with a flat right edge and rounded left side */
+[dir="rtl"] .timeline .card .year {
+  position: absolute;
+  top: 16px;
+  inset-inline-end: 16px;
+  inset-inline-start: auto;
+  padding: 6px 16px;
+  border-radius: 0 999px 999px 0; /* round left side only (mirror) */
+  margin: 0;
+  float: none;
+  min-width: 3.2rem;
+  text-align: center;
+  z-index: 2;
+}
+
+/* Ensure titles clear the badge in both directions */
+.timeline .card .title {
+  margin-top: 3.5rem;
+}
+
+
+
+/* ==== RTL: Panel (hover .more) text alignment + punctuation ==== */
+[dir="rtl"] .timeline .card .more,
+[dir="rtl"] .timeline .card .more p,
+[dir="rtl"] .timeline .card .more * {
+  text-align: right !important;   /* visually right */
+  direction: auto;                /* base dir from first strong char */
+  unicode-bidi: plaintext;        /* keep . and ? on the correct edge */
+}
+
+
+
+/* === RTL: right-align visible card text (title + summary) and keep punctuation sane === */
+[dir="rtl"] .timeline .card .title,
+[dir="rtl"] .timeline .card .summary,
+[dir="rtl"] .timeline .card p {
+  text-align: right !important;
+  direction: auto;
+  unicode-bidi: plaintext;
+}
+
+
+
+/* ==== A11y & Perf helpers for Lighthouse 100s ==== */
+.skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;}
+.skip-link:focus{left:12px;top:12px;width:auto;height:auto;padding:.5rem .75rem;background:#fff;color:#000;border-radius:.5rem;z-index:9999;}
+:focus-visible{outline:3px solid #ffbf47;outline-offset:2px;}
+/* Improve contrast on footer links */
+footer .nav-link{color:#e6f0ff;}
+footer .nav-link:focus,footer .nav-link:hover{color:#fff;text-decoration:underline;}
+/* Keep Explore More buttons aligned */
+.explore-more .card{display:flex;flex-direction:column;}
+.explore-more .card-body{display:flex;flex-direction:column;gap:.5rem;}
+.explore-more .learn-btn{margin-top:auto;align-self:flex-start;}
+/* Performance: let off-screen cards skip painting until needed */
+.timeline .card{content-visibility:auto;contain-intrinsic-size:320px 460px;}
+/* Ensure images don't cause CLS */
+.thumb img{aspect-ratio:16/10;height:auto;width:100%;}
+
+
+
+/* === Intel brand: deeper gradient + higher contrast buttons === */
+:root {
+  --intel-blue: #0068b5;
+  --intel-cyan: #00a3ff;
+}
+body {
+  background: radial-gradient(1200px 700px at 50% -200px, #0b74c1 0%, transparent 60%) ,
+              linear-gradient(135deg, var(--intel-blue) 0%, var(--intel-cyan) 100%) fixed no-repeat;
+}
+.btn-primary { background: #0072ce; border-color: #0072ce; color:#fff; }
+.btn-primary:hover { background:#005ea6; border-color:#005ea6; }
+.btn-outline-primary { color:#ffffff; border-color:#ffffff; }
+.btn-outline-primary:hover { background:#ffffff; color:#005ea6; }
+
+/* === Section layout after timeline === */
+section.container { margin-top: 48px; }
+.explore-more .card { background:#fff; border:0; box-shadow: 0 10px 24px rgba(0,0,0,.12); }
+.explore-more .card-body { padding: 1.25rem 1.25rem 1rem; }
+.explore-more .card-title i { color:#0099ff; }
+.explore-more .learn-btn { border-width:2px; }
+
+/* tighten form and FAQ spacing */
+section[aria-labelledby="subscribe-title"] .bg-white { box-shadow: 0 10px 28px rgba(0,0,0,.14); }
+section[aria-labelledby="faq-title"] .accordion-button { background:#e8f3ff; }
+section[aria-labelledby="faq-title"] .accordion-body { background:#fff; }
+
+/* performance: prefer no animations for reduced motion (keeps Lighthouse happy) */
+@media (prefers-reduced-motion: reduce) {
+  .card, .more { transition: none !important; }
+}
+
+
+
+/* === Intel brand tuning + timeline surface === */
+:root {
+  --intel-blue-700:#00579e;
+  --intel-blue-600:#0b74c1;
+  --intel-cyan-500:#1ab0ff;
+  --surface-glass:rgba(255,255,255,.08);
+  --surface-glass-2:rgba(255,255,255,.06);
+  --border-glass:rgba(255,255,255,.28);
+}
+/* Hero background: subtle radial glow + diagonal blend */
+body{
+  background:
+    radial-gradient(1200px 700px at 50% -220px, var(--intel-blue-600) 0%, transparent 60%),
+    linear-gradient(135deg, var(--bg) 0%, var(--bg2) 100%) fixed no-repeat;
+}
+
+/* Give the timeline a defined surface with border and generous padding */
+.timeline{
+  background: linear-gradient(180deg, var(--surface-glass), var(--surface-glass-2));
+  border:1.5px solid var(--border-glass);
+  border-radius: 24px;
+  padding: 28px 28px 16px; /* extra inner padding as requested */
+  box-shadow: 0 30px 80px rgba(0,0,0,.08) inset, 0 16px 32px rgba(0,0,0,.08);
+}
+
+/* Slightly tighten card width so more fits inside bordered timeline */
+.timeline .card{ flex-basis: 292px; }
+
+/* Layout polish below timeline */
+.explore-more .card { border:1px solid rgba(0,0,0,.06); }
+section[aria-labelledby="subscribe-title"] .bg-white { border:1px solid rgba(0,0,0,.06); }
+footer{ border-top:1px solid rgba(255,255,255,.2); }
+
+/* Buttons: stronger contrast vs blue background */
+.btn-primary{ background:#0072ce; border-color:#0072ce; color:#fff; }
+.btn-primary:hover{ background:#005ea6; border-color:#005ea6; }
+.btn-outline-primary{ color:#fff; border-color:#fff; }
+.btn-outline-primary:hover{ background:#fff; color:#005ea6; }
+
+/* Micro spacing polish */
+section.container{ margin-top:48px; }
+.explore-more .card-body{ padding:1.25rem 1.25rem 1rem; }
+
+
+
+/* === Explore More: keep the Learn More buttons always visible === */
+.explore-more .learn-btn{
+  opacity:1 !important;
+  visibility:visible !important;
+  transform:none !important;
+  display:inline-block !important;
+}
+.explore-more .card:hover .learn-btn{ opacity:1; }
+
+
+
+/* === Intel-themed background (gradient + blueprint circuit pattern) === */
+:root{
+  --intel-blue:#0068b5;
+  --intel-blue-700:#00579e;
+  --intel-cyan:#20b6ff;
+  --intel-bg1:#0b74c1;
+  --intel-bg2:#0a8bff;
+}
+body{
+  /* layered gradient for depth */
+  background:
+    radial-gradient(1200px 700px at 50% -240px, var(--intel-bg2) 0%, transparent 60%),
+    linear-gradient(135deg, var(--intel-blue) 0%, var(--intel-cyan) 100%) fixed no-repeat;
+  position: relative;
+}
+/* subtle Intel-style blueprint/circuit overlay */
+body::before{
+  content:"";
+  position:fixed; inset:0;
+  pointer-events:none;
+  opacity:.12;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320' viewBox='0 0 320 320'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.35' stroke-width='1'%3E%3Cpath d='M10 20h100m20 0h80m-80 0v40m-40 40h80m-60 0v80m120-80v80m-40-40h80m-20-60h60'/%3E%3Ccircle cx='70' cy='70' r='6'/%3E%3Ccircle cx='250' cy='110' r='6'/%3E%3Crect x='200' y='200' width='60' height='40' rx='6'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 320px 320px;
+  z-index:0;
+}
+/* lift main content above pattern */
+header.hero, main, footer{ position: relative; z-index:1; }
+
+
+
+/* Explore More visual polish */
+.explore-more .card{
+  background:#fff;
+  border:0;
+  box-shadow:0 12px 28px rgba(0,0,0,.14);
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.explore-more .card:hover{ transform:translateY(-3px); box-shadow:0 16px 36px rgba(0,0,0,.18); }
+.explore-more .card-body{ display:flex; flex-direction:column; gap:.5rem; }
+.explore-more .card-title{ display:flex; align-items:center; gap:.5rem; }
+.explore-more .learn-btn{ margin-top:auto; }
+
+
+
+/* === Friendlier design refresh === */
+:root{
+  --radius: 20px;
+  --soft-border-dark: rgba(0, 34, 68, .10);
+  --soft-border-dark-2: rgba(0, 34, 68, .18);
+  --soft-border-light: rgba(255,255,255,.28);
+}
+/* Softer, translucent borders */
+.card{ border:1px solid var(--soft-border-dark); border-radius: var(--radius); }
+.card:hover, .card:focus-within{ border-color: var(--soft-border-dark-2); }
+.explore-more .card{ border:1px solid var(--soft-border-dark); border-radius: var(--radius); }
+section[aria-labelledby="subscribe-title"] .bg-white{ border:1px solid var(--soft-border-dark); border-radius: var(--radius); }
+.accordion-item{ border:1px solid var(--soft-border-dark); border-radius: var(--radius); overflow:hidden; }
+/* Timeline glass border */
+.timeline{ border:1.5px solid var(--soft-border-light); border-radius: calc(var(--radius) + 4px); }
+/* Friendlier buttons (pills) */
+.btn, .learn-btn{ border-radius:999px; padding-inline:1rem; }
+.btn-primary{ background:#1570ef; border-color:#1570ef; }
+.btn-primary:hover{ background:#0e5dd8; border-color:#0e5dd8; }
+.btn-outline-primary{ color:#fff; border-color:#fff; }
+.btn-outline-primary:hover{ background:#fff; color:#0b5bd3; }
+/* Typography */
+body{ font-family:"Poppins", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif; }
+.hero h1{ letter-spacing:-.015em; }
+section.container h2{ letter-spacing:0; font-weight:800; }
+/* Background texture */
+body::before{
+  opacity:.10;
+  background-size:360px 360px;
+  filter:saturate(1.05);
+}
+
+
+
+/* === Added by assistant: Photographic Intel background + contrast tuning === */
+body{
+  /* keep everything you had, then layer the image + a readable overlay */
+  background:
+    linear-gradient(180deg, rgba(0,22,44,.55), rgba(0,22,44,.25)),
+    url("img/intel.png") center / cover no-repeat fixed,
+    radial-gradient(1200px 700px at 50% -240px, var(--intel-bg2, #0a8bff) 0%, transparent 60%),
+    linear-gradient(135deg, var(--intel-blue, #0068b5) 0%, var(--intel-cyan, #20b6ff) 100%) fixed no-repeat;
+}
+
+/* Give hero + timeline a subtle glass surface over the photo so text remains legible */
+header.hero{
+  background-color: rgba(0,25,55,.28);
+  -webkit-backdrop-filter: saturate(115%) blur(0px);
+  backdrop-filter: saturate(115%) blur(0px);
+  border-bottom: 1px solid rgba(255,255,255,.25);
+  padding-bottom: 48px;
+}
+.timeline{
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.06));
+  border: 1.5px solid rgba(255,255,255,.28);
+  border-radius: 24px;
+  box-shadow: 0 30px 80px rgba(0,0,0,.08) inset, 0 16px 32px rgba(0,0,0,.08);
+}
+
+/* Keep headings readable on photo */
+.hero h1, .hero .subhead, section.container h2 { color: #ffffff !important; text-shadow: 0 2px 12px rgba(0,0,0,.35); }
+.hero-underline{ background: linear-gradient(90deg,#7fd3ff,#10a7ff); }
+
+/* Cards remain solid for maximum contrast */
+.card{ background:#ffffff; }
+
+/* Footer separation on photo */
+footer{ background-color: rgba(10,20,30,.9) !important; }
+
+/* === Always show "Learn More" buttons in Explore More cards === */
+.explore-more .learn-btn{
+  opacity:1 !important;
+  visibility:visible !important;
+  transform:none !important;
+  display:inline-flex !important;
+  align-items:center;
+  gap:.4rem;
+}
+
+/* Buttons over photo: stronger contrast */
+.btn-outline-primary{ color:#ffffff; border-color:#ffffff; }
+.btn-outline-primary:hover{ background:#ffffff; color:#005ea6; }
+
+/* Slightly deepen muted text for readability over image echo */
+.text-muted{ color:#5a6478 !important; }
+
+
+
+
+/* --- Learn More buttons: always visible (no hover required) --- */
+.explore-more .card .learn-btn {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  display: inline-flex !important;
+  align-items: center;
+  gap: .4rem;
+  margin-top: auto;           /* stick to bottom of card body */
+  align-self: flex-start;     /* start edge in both LTR/RTL */
+}
+
+/* Keep appearance the same on hover (no fade-in animation) */
+.explore-more .card:hover .learn-btn { opacity: 1 !important; }
+
+
+
+
+/* --- Explore More: ensure Learn More button is visible on white cards --- */
+.explore-more .learn-btn {
+  border-color: var(--brand) !important;
+  color: var(--brand) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+.explore-more .learn-btn:hover {
+  background: var(--brand) !important;
+  color: #fff !important;
+  border-color: var(--brand) !important;
+}
+
